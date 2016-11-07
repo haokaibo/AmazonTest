@@ -18,13 +18,33 @@ public class BinarySearchTreeTest extends TestCase {
     }
 
     @Test
-    public void testCheckBST() {
-        Node root = new Node(3,
-                new Node(5, new Node(1), new Node(4)),
-                new Node(2, new Node(6), null));
+    public void testCheckBSTWhenDataIsFine() {
+        int[] a = new int[31];
+        for (int i = 0; i < a.length; i++) {
+            a[i] = i + 1;
+        }
+        Node root = Node.buildTreeByLevelAndValues(0, a.length - 1, a);
+
+        assertTrue(Node.checkBST(root));
+    }
+
+    @Test
+    public void testCheckBSTWhenDataIsBad() {
+        Node root = new Node(4,
+                new Node(2, new Node(8), new Node(3)),
+                new Node(6, new Node(5), new Node(7)));
 
         assertFalse(Node.checkBST(root));
     }
 
+    @Test
+    public void testBuildTreeByLevelAndValues() {
+        int[] a = new int[31];
+        for (int i = 0; i < a.length; i++) {
+            a[i] = i + 1;
+        }
+        Node root = Node.buildTreeByLevelAndValues(0, a.length - 1, a);
+        assertTrue(root.getData() == 16);
+    }
 
 }

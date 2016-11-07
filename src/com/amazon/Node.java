@@ -18,18 +18,16 @@ public class Node {
         this.right = right;
     }
 
-    public static boolean checkBST(Node root) {
+    public boolean checkBST(Node root) {
         // check if the left sub tree is a BST
         if (root == null)
             return true;
-        if (!checkBST(root.left))
-            return false;
-        if (!checkBST(root.right))
-            return false;
-        if (root.left != null && root.left.data > root.data)
-            return false;
-        if (root.right != null && root.right.data < root.data)
-            return false;
+        if (root.left != null)
+            if (root.left.data >= root.data || !checkBST(root.left))
+                return false;
+        if (root.right != null)
+            if (root.right.data < root.data || !checkBST(root.right))
+                return false;
         return true;
     }
 
@@ -58,5 +56,19 @@ public class Node {
     public Node setRight(Node right) {
         this.right = right;
         return this;
+    }
+
+    public static Node buildTreeByLevelAndValues(int begin, int end, int[] values) {
+        if (begin > end)
+            return null;
+        if (begin == end)
+            return new Node(values[begin]);
+        int mid = (begin + end + 1) / 2;
+        Node root = new Node(values[mid]);
+        Node left = buildTreeByLevelAndValues(begin, mid - 1, values);
+        Node right = buildTreeByLevelAndValues(mid + 1, end, values);
+        root.left = left;
+        root.right = right;
+        return root;
     }
 }
