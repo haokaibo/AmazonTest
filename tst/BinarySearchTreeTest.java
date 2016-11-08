@@ -25,7 +25,7 @@ public class BinarySearchTreeTest extends TestCase {
         }
         Node root = Node.buildTreeByLevelAndValues(0, a.length - 1, a);
 
-        assertTrue(Node.checkBST(root));
+        assertTrue(root.checkBST(root));
     }
 
     @Test
@@ -34,7 +34,21 @@ public class BinarySearchTreeTest extends TestCase {
                 new Node(2, new Node(8), new Node(3)),
                 new Node(6, new Node(5), new Node(7)));
 
-        assertFalse(Node.checkBST(root));
+        assertFalse(root.checkBST(root));
+    }
+
+    @Test
+    public void testCheckBSTWhenDataIsBad2() {
+        int[] a = new int[]{1, 2, 3, 5, 4, 6, 7};
+        Node root = Node.buildTreeByLevelAndValues(0, a.length - 1, a);
+        assertFalse(root.checkBST(root));
+    }
+
+    @Test
+    public void testCheckBSTWhenDataIsBad3() {
+        int[] a = new int[]{1, 2, 2, 4, 5, 6, 7};
+        Node root = Node.buildTreeByLevelAndValues(0, a.length - 1, a);
+        assertFalse(root.checkBST(root));
     }
 
     @Test
