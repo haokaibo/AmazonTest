@@ -8,4 +8,5 @@ import java.util.HashMap;
 public class Tries {
     HashMap<Character, Tries> children;
     boolean isCompleteWord;
+    int childWordCount;
 }
