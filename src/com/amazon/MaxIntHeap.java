@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Created by kaibohao on 2016-11-12.
  */
-public class MinIntHeap {
+public class MaxIntHeap {
     private int capacity = 10;
     private int size = 0;
 
@@ -82,7 +82,7 @@ public class MinIntHeap {
 
     public void heapifyUp() {
         int index = size - 1;
-        while (hasParent(index) && parent(index) > items[index]) {
+        while (hasParent(index) && parent(index) < items[index]) {
             swap(getParentIndex(index), index);
             index = getParentIndex(index);
         }
@@ -91,17 +91,17 @@ public class MinIntHeap {
     public void heapifyDown() {
         int index = 0;
         while (hasLeftChild(index)) {
-            int smallerChildIndex = getLeftChildIndex(index);
-            if (hasRightChild(index) && rightChild(index) < leftChild(index)) {
-                smallerChildIndex = getRightChildIndex(index);
+            int biggerChildIndex = getLeftChildIndex(index);
+            if (hasRightChild(index) && rightChild(index) > leftChild(index)) {
+                biggerChildIndex = getRightChildIndex(index);
             }
 
-            if (items[index] < items[smallerChildIndex]) {
+            if (items[index] > items[biggerChildIndex]) {
                 break;
             } else {
-                swap(index, smallerChildIndex);
+                swap(index, biggerChildIndex);
             }
-            index = smallerChildIndex;
+            index = biggerChildIndex;
         }
     }
 }
