@@ -30,7 +30,6 @@ public class Anagrams {
         }
 
         // 4. Iterate the dictionary to count
-
         for (int v : reviewedCharMap.values()){
             totalGapCount += Math.abs(v);
         }

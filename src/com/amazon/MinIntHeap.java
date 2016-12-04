@@ -11,6 +11,15 @@ public class MinIntHeap {
 
     int[] items = new int[capacity];
 
+    public MinIntHeap() {
+
+    }
+
+    public MinIntHeap(int capacity) {
+        this.capacity = capacity;
+        this.items = new int[this.capacity];
+    }
+
     private int getLeftChildIndex(int parentIndex) {
         return 2 * parentIndex + 1;
     }
@@ -90,6 +99,57 @@ public class MinIntHeap {
 
     public void heapifyDown() {
         int index = 0;
+        while (hasLeftChild(index)) {
+            int smallerChildIndex = getLeftChildIndex(index);
+            if (hasRightChild(index) && rightChild(index) < leftChild(index)) {
+                smallerChildIndex = getRightChildIndex(index);
+            }
+
+            if (items[index] < items[smallerChildIndex]) {
+                break;
+            } else {
+                swap(index, smallerChildIndex);
+            }
+            index = smallerChildIndex;
+        }
+    }
+
+    public int removeByValue(int value) {
+        if (size == 0)
+            return -1;
+        int index = binarySearchIndexByValue(0, value);
+        items[index] = items[size - 1];
+        size--;
+        heapifyDown(index);
+        return index;
+    }
+
+    private int binarySearchIndexByValue(int index, int value) {
+        int result = -1;
+        if (items[index] == value)
+            return index;
+        if (items[index] > value)
+            return -1;
+        if (hasLeftChild(index)) {
+            if (items[leftChild(index)] == value) {
+                return leftChild(index);
+            }
+        }
+        if (hasRightChild(index)) {
+            if (items[rightChild(index)] == value) {
+                return rightChild(index);
+            }
+        }
+        if (hasLeftChild(index) && value > leftChild(index)) {
+            result = binarySearchIndexByValue(leftChild(index), value);
+        }
+        if (result == -1 && hasRightChild(index) && value > rightChild(index)) {
+            result = binarySearchIndexByValue(rightChild(index), value);
+        }
+        return result;
+    }
+
+    public void heapifyDown(int index) {
         while (hasLeftChild(index)) {
             int smallerChildIndex = getLeftChildIndex(index);
             if (hasRightChild(index) && rightChild(index) < leftChild(index)) {
