@@ -30,6 +30,7 @@ public class Graph {
         Node s = getNode(source);
         Node d = getNode(destination);
         s.adjacent.add(d);
+        d.adjacent.add(s);
     }
 
     public HashMap<Integer, Integer> countPathBFS(Node source) {
@@ -37,6 +38,8 @@ public class Graph {
         countPathBFS(source, visitedPath);
         return visitedPath;
     }
+
+    int count = 0;
 
     private void countPathBFS(Node source, HashMap<Integer, Integer> visitedPath) {
         if (source == null || source.adjacent == null)
@@ -61,7 +64,7 @@ public class Graph {
                 nextLevelNodes = 0;
                 currentLevel++;
             }
-        }
+        }// end of while
     }
 
     private boolean hasPathDFS(Node source, Node destination, HashSet<Integer> visited) {
@@ -128,11 +131,12 @@ public class Graph {
                 if (!countPaths.containsKey(j)) {
                     System.out.print("-1 ");
                 } else {
+                    // System.out.print(String.format("%d (%d -> %d)\t", countPaths.get(j) * STEP_LENGTH, s, j));
+
                     System.out.print(String.format("%d ", countPaths.get(j) * STEP_LENGTH));
                 }
             }
             System.out.println();
-        }
-
-    }
+        } // end of for (int i = 0; i < q; i++)
+    }// end of main
 }
