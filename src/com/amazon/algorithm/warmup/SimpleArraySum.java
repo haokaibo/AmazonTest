@@ -1,4 +1,4 @@
-package com.amazon;
+package com.amazon.algorithm.warmup;
 
 import java.util.Scanner;
 
