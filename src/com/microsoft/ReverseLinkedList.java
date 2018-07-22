@@ -19,7 +19,7 @@ public class ReverseLinkedList {
         }
     }
 
-    public static Node change(Node root, int k) {
+    public static Node reverseByK(Node root, int k) {
         if (root == null)
             return null;
 
@@ -30,27 +30,29 @@ public class ReverseLinkedList {
 
         while (current != null) {
             int i = 0;
-            Node temp = current;
+            Node subHead = current;
             for (; current != null && i < k; i++) {
                 s.push(current);
                 current = current.next;
             }
-
             if (i == k) {
                 while (!s.empty()) {
                     if (head == null) {
-                        head = s.pop();
-                        tail = head;
+                        head = tail = s.pop();
                     } else {
                         tail.next = s.pop();
                         tail = tail.next;
                     }
                 }
-            } else {
-                while (temp != null) {
-                    tail.next = temp;
-                    tail = tail.next;
-                    temp = temp.next;
+            } else{
+                while(subHead.next!=null) {
+                    if (head == null) {
+                        head = tail = subHead;
+                    }else {
+                        tail.next = subHead;
+                        tail = tail.next;
+                    }
+                    subHead = subHead.next;
                 }
             }
         }

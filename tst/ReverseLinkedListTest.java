@@ -11,10 +11,10 @@ public class ReverseLinkedListTest extends TestCase {
     }
 
     @Test
-    public void testChangeOrder() {
+    public void testReverseByK() {
         ReverseLinkedList.Node head = null;
         ReverseLinkedList.Node tail = null;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 2; i++) {
             if (head == null) {
                 head = new ReverseLinkedList.Node(i + 1);
                 tail = head;
@@ -25,7 +25,7 @@ public class ReverseLinkedListTest extends TestCase {
         }
 
         int k = 3;
-        ReverseLinkedList.Node newHead = ReverseLinkedList.change(head, k);
+        ReverseLinkedList.Node newHead = ReverseLinkedList.reverseByK(head, k);
 
         while (newHead != null) {
             System.out.print(newHead.value);
