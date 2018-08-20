@@ -26,5 +26,11 @@ public class AnagramsTest extends TestCase {
         assertEquals(102, result);
     }
 
+    @Test
+    public void testA(){
+        for(Character c : "abc".toCharArray()){
+            System.out.println(c);
+        }
+    }
 
 }

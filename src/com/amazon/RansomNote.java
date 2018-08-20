@@ -33,8 +33,8 @@ public class RansomNote {
             return true;
         if (magazine == null || magazine.length == 0 || magazine.length < ransom.length)
             return false;
-
         HashMap<String, Integer> dic = new HashMap<>();
+
         for (String w : magazine) {
             if (dic.containsKey(w)) {
                 dic.put(w, dic.get(w) + 1);
