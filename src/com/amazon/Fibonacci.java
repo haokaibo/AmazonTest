@@ -1,11 +1,19 @@
 package com.amazon;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
  * Created by kaibohao on 2016-11-30.
  */
 public class Fibonacci {
+
+    public static int a(int n){
+        int[] a = new int[n];
+        a[0] =1;
+        return a[0];
+    }
+
 
     public static int fibonacci(int n) {
         int[] cache = new int[n + 1];
@@ -24,9 +32,11 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        scanner.close();
-        System.out.println(fibonacci(n));
+//        Scanner scanner = new Scanner(System.in);
+//        int n = scanner.nextInt();
+//        scanner.close();
+//        System.out.println(fibonacci(n));
+        int[] a = new int[]{0, 1};
+        System.out.println(Arrays.toString(a));
     }
 }
