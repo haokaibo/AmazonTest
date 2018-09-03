@@ -1,5 +1,19 @@
 package com.google;
 
+/*
+Write a function in the language of your choice that accepts two parameters. The first parameter is a 2-dimensional
+array of characters, and the second parameter a string which is the word we want to count.
+An example would be the following inputs:
+A B X D W H O W
+W O R D S E U W
+O R H W O R D S
+R S E I J E E S
+D E R G H I R K
+S I E P R S E U
+'WORDS'
+This should return 3 (3 instances of WORDS)
+
+ */
 public class WordSearch {
     public static int findWords(char[][] chars, char[] keyword) {
         if (chars == null || keyword == null || chars.length == 0 || keyword.length == 0) {
