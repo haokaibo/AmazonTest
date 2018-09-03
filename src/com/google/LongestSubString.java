@@ -1,9 +1,6 @@
 package com.google;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /*
 Given an integer k and a string s, find the length of the longest substring that contains at most k distinct characters.
@@ -21,7 +18,7 @@ public class LongestSubString {
         int firstLastLen = 0;
         HashMap<Character, Integer> hm = new HashMap<>();
         char[] keys = new char[k];
-        int firstkeyIndex = 0;
+        int firstKeyIndex = 0;
 
         for (int i = 0; i < chars.length; i++) {
             if (!hm.containsKey(chars[i])) {
@@ -29,10 +26,10 @@ public class LongestSubString {
                 if (hm.size() > k) {
                     if (len > maxLen) {
                         maxLen = len;
-                        startPos = hm.get(keys[firstkeyIndex]);
+                        startPos = hm.get(keys[firstKeyIndex]);
                     }
-                    hm.remove(keys[firstkeyIndex]);
-                    firstkeyIndex = (firstkeyIndex + 1) % k;
+                    hm.remove(keys[firstKeyIndex]);
+                    firstKeyIndex = (firstKeyIndex + 1) % k;
                     len = len - firstLastLen;
                     firstLastLen = 0;
                 }
@@ -44,11 +41,15 @@ public class LongestSubString {
             }
         }
 
+        if (len == chars.length) {
+            return origin;
+        }
+
         return origin.substring(startPos, startPos + maxLen);
     }
 
     public static void main(String[] args) {
-        String substring = new LongestSubString().findLongestSubString("abcbccccba", 2);
+        String substring = new LongestSubString().findLongestSubString("abc", 3);
         System.out.println(substring);
     }
 
