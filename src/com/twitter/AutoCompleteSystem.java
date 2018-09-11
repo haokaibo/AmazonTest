@@ -64,27 +64,25 @@ public class AutoCompleteSystem {
     public void iterateTries(Tries tries, StringBuilder sb, List<String> matches) {
         if (tries == null)
             return;
-        if (tries.isCompleteWord){
+        if (tries.isCompleteWord) {
             matches.add(sb.toString());
             return;
         }
         if (tries.children == null)
             return;
-        Iterator<Map.Entry<Character, Tries>> iterator = tries.children.entrySet().iterator();
-        while(iterator.hasNext()){
+
+        tries.children.forEach((k, v) -> {
             StringBuilder sbTemp = new StringBuilder(sb);
-            Map.Entry<Character, Tries> child = iterator.next();
-            sbTemp.append(child.getKey());
-            Tries current = child.getValue();
-            iterateTries(current, sbTemp, matches);
-        }
+            sbTemp.append(k);
+            iterateTries(v, sbTemp, matches);
+        });
     }
 
     public static void main(String[] args) {
         String[] result = new AutoCompleteSystem().
                 queryString(new String[]{"dog", "deer", "deal"}, "de");
 
-        for (String s : result){
+        for (String s : result) {
             System.out.println(s);
         }
     }
