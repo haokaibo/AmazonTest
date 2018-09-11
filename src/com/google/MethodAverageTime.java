@@ -25,8 +25,8 @@ public class MethodAverageTime {
 
     class Times {
         long sumTime;
-        HashMap<String, Long> time = new HashMap<>();
         int N;
+        HashMap<String, Long> time = new HashMap<>();
 
         void put(String action, Long value) {
             time.put(action, value);
