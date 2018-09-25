@@ -3,10 +3,7 @@ import com.opencsv.CSVWriter;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class AuthGenerator {
     static String DELETE_TEMPLATE = "delete from `fcauth`.`t_role_resource` where `role_id` = %s; \n";
@@ -15,12 +12,27 @@ public class AuthGenerator {
     private static String ROLE_NAMES = "系统管理员,总经理,副总经理,财务部总经理,财务部出纳员,市场部总经理,市场部客户总监," +
             "产品部总经理,产品部货品管理主管,产品部套保交易员,产品部物流员,销售部总经理,销售部渠道经理,分销商,服务商,供应商,会员";
     private static String ROLE_IDS = "0,1,2,4,11,6,16,7,23,30,24,8,28,34,32,33,31";
+    private static String TABLE_NAMES = "t_goods,t_good_deduction_setting,t_good_specification,t_good_supply_only;" +
+            "t_category;t_combo,t_combo_goods;t_distribution;t_tax;t_raw_material;t_warehouse,t_good_allocation;" +
+            "t_inbound,t_order_goods;t_other_inbound,t_order_goods;t_inventory,t_warehouse,t_goods,t_good_specification;" +
+            "t_inventory_check,t_inventory_check_checker,t_inventory_check_records;t_logistic_vendor;t_sales_order," +
+            "t_order_goods;t_presale_order,t_order_goods;t_good_purchasing,t_raw_material_purchasing,t_order_goods;" +
+            "t_good_purchasing,t_order_goods;t_raw_material_purchasing,t_raw_material_purchasing_detail;" +
+            "t_outbound_process,t_outbound_process_raw_material,t_outbound_process_raw_material_goods,t_order_goods;" +
+            "t_inventory_transfer_order,t_order_goods;t_exchange_goods_order,t_order_goods;t_repurchase_order," +
+            "t_repurchase_order_goods;t_refund_order,t_order_goods;t_tao_bao_order;t_tao_bao_order;t_member;t_gold_card," +
+            "t_member_gold_card;t_partner;t_company,t_person;t_user";
+    private static String RESOURCE_NAMES2 = "商品信息管理,商品分类管理,套餐管理,渠道分销上下架,渠道税率设置,原料信息管理,仓库设置," +
+            "采购入库管理,其他入库管理,库存查询,库存盘点,物流管理,销售订单,预售订单,采购订单查询,成品采购订单,原料采购单,去料加工单," +
+            "库存调拨单,换货调拨单,收金订单,退货退款,套保订单,套保查询,会员信息," +
+            "黄金卡,合作伙伴管理,公司信息管理,人员管理";
     private static String RESOURCE_NAMES = "商品信息管理,商品分类管理,套餐管理,渠道分销上下架,渠道税率设置,原料信息管理,仓库设置," +
             "采购入库管理,其他入库管理,库存查询,库存盘点,物流管理,销售订单,预售订单,采购订单查询,成品采购订单,原料采购单,去料加工单," +
-            "库存调拨单,换货调拨单,收金订单,退货退款,套保订单,套保查询,待签任务,待办任务,会员信息,消费记录,积分记录,营销管理,优惠券," +
+            "库存调拨单,换货调拨单,收金订单,退货退款,套保订单,套保查询,待签任务,待办任务,会员信息" +
             "黄金卡,限时折扣,消费赠券,短信营销,合作伙伴管理,公司信息管理,人员管理";
     private static String RESOURCE_IDS = "16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41," +
             "42,43,44,45,46,47,48,49,50,51,52,53";
+    private static String[] RIGHTS = new String[]{"可读","可写"};
 
     public class Role {
         String id;
@@ -48,9 +60,13 @@ public class AuthGenerator {
     }
 
     public static void main(String[] args) {
-//        AuthGenerator authGenerator = new AuthGenerator();
+        AuthGenerator authGenerator = new AuthGenerator();
 //        System.out.println(authGenerator.generateSQL("/Users/apple/Documents/石总/微购商城/权限设置1.0.csv"));
-        generateRecordLevelAuth("/Users/apple/Documents/石总/微购商城/记录级别权限设置1.0.csv");
+//        generateRecordLevelAuth("/Users/apple/Documents/石总/微购商城/记录级别权限设置1.0.csv");
+        authGenerator.generateFieldLevelAuth(
+                "/Users/apple/Documents/石总/微购商城/table_info1.1.csv",
+                "/Users/apple/Documents/石总/微购商城/字段级别权限设置1.0.csv"
+        );
     }
 
     public String generateSQL(String configFilePath) {
@@ -158,5 +174,87 @@ public class AuthGenerator {
             e.printStackTrace();
         }
         System.out.println("output the result to: " + outputFilePath);
+    }
+
+    public void generateFieldLevelAuth(String inputFilePath, String outputFilePath) {
+
+        // form the dictionary for forms.
+        String[] tablesNames = TABLE_NAMES.split(";");
+        String[] menuNames = RESOURCE_NAMES2.split(",");
+        String[] roleNames = ROLE_NAMES.split(",");
+        String[] roleIds = ROLE_IDS.split(",");
+        Map<String, Map<String, Integer>> dic = new HashMap<String, Map<String, Integer>>();
+        for (int i = 0; i < tablesNames.length; i++) {
+            String[] tables = tablesNames[i].split(",");
+            for (int j = 0; j < tables.length; j++) {
+                if (!dic.containsKey(tables[j])) {
+                    dic.put(tables[j], new HashMap<String, Integer>());
+                }
+                if (!dic.get(tables[j]).containsKey(menuNames[i])) {
+                    dic.get(tables[j]).put(menuNames[i], i + 1);
+                }
+            }
+        }
+        try {
+            CSVReader reader = new CSVReader(new FileReader(inputFilePath));
+            CSVWriter writer = new CSVWriter(new PrintWriter(
+                    new OutputStreamWriter(new FileOutputStream(outputFilePath),
+                            Charset.forName("UTF-8"))), ',');
+            String[] nextLine;
+            int rowIndex = 0;
+            List<String> row = new ArrayList<>();
+            while ((nextLine = reader.readNext()) != null) {
+                if (rowIndex == 0) {
+                    for(int i=0; i< 1+ nextLine.length;i++){
+                        row.add("");
+                    }
+                    row.add("role_id");
+                    for (String roleId : roleIds){
+                        row.add(roleId);
+                    }
+                    writer.writeNext(row.toArray(new String[row.size()]));
+                    System.out.printf("proceed %d row...\n", rowIndex);
+                    rowIndex++;
+
+                    row = new ArrayList<>();
+
+                    row.add("序号");
+                    row.add("功能");
+                    for (int i = 0; i < nextLine.length; i++) {
+                        row.add(nextLine[i]);
+                    }
+                    for (String roleName : roleNames){
+                        row.add(roleName);
+                    }
+                    writer.writeNext(row.toArray(new String[row.size()]));
+                    System.out.printf("proceed %d row...\n", rowIndex);
+                    rowIndex++;
+                } else {
+                    String tableName = nextLine[0];
+                    if (dic.containsKey(tableName)) {
+                        for (Map.Entry<String, Integer> entry : dic.get(tableName).entrySet()) {
+                            row = new ArrayList<>();
+                            row.add(entry.getValue().toString());
+                            row.add(entry.getKey());
+                            if(nextLine[2].endsWith("id"))
+                                continue;
+                            for (int i = 0; i < nextLine.length; i++) {
+                                row.add(nextLine[i]);
+                            }
+                            writer.writeNext(row.toArray(new String[row.size()]));
+                            System.out.printf("proceed %d row...\n", rowIndex);
+                            rowIndex++;
+
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+            }
+            writer.close();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
