@@ -9,9 +9,11 @@ public class AuthGenerator {
     static String DELETE_TEMPLATE = "delete from `fcauth`.`t_role_resource` where `role_id` = %s; \n";
     static String INSERT_TEMPLATE = "INSERT INTO `fcauth`.`t_role_resource` " +
             "(`role_id`, `resource_id`) VALUES (%s, %s); -- %s \n";
-    private static String ROLE_NAMES = "系统管理员,总经理,副总经理,财务部总经理,财务部出纳员,市场部总经理,市场部客户总监," +
-            "产品部总经理,产品部货品管理主管,产品部套保交易员,产品部物流员,销售部总经理,销售部渠道经理,分销商,服务商,供应商,会员";
-    private static String ROLE_IDS = "0,1,2,4,11,6,16,7,23,30,24,8,28,34,32,33,31";
+    private static String ROLE_NAMES = "系统管理员,董事,总经理,副总经理,财务部总经理,财务部出纳员,财务部审计员,财务部会计," +
+            "财务部商务员,市场部总经理,市场部客服,市场部展业研发,市场部客服总监,产品部总经理,产品部SEO推广,产品部货品管理主管," +
+            "产品部库管,产品部物流员,套保交易员,销售部总经理,销售部副总经理,销售部区域总监,销售部渠道经理,综合部专员,综合部总经理," +
+            "分销商,服务商,供应商,会员,客户经理";
+    private static String ROLE_IDS = "0,x,1,2,4,11,x,x,x,6,x,x,16,7,x,23,x,24,30,8,x,x,28,x,x,34,32,33,31,x";
     private static String TABLE_NAMES = "t_goods,t_good_deduction_setting,t_good_specification,t_good_supply_only;" +
             "t_category;t_combo,t_combo_goods;t_distribution;t_tax;t_raw_material;t_warehouse,t_good_allocation;" +
             "t_inbound,t_order_goods;t_other_inbound,t_order_goods;t_inventory,t_warehouse,t_goods,t_good_specification;" +
@@ -26,13 +28,20 @@ public class AuthGenerator {
             "采购入库管理,其他入库管理,库存查询,库存盘点,物流管理,销售订单,预售订单,采购订单查询,成品采购订单,原料采购单,去料加工单," +
             "库存调拨单,换货调拨单,收金订单,退货退款,套保订单,套保查询,会员信息," +
             "黄金卡,合作伙伴管理,公司信息管理,人员管理";
+    private static String BUTTONS = "保存,返回;保存,返回;保存,返回;保存,返回,提交审核,同意,驳回,撤销;保存,返回;保存,返回;保存,返回;" +
+            "保存,返回;保存,返回;;保存,返回,提交审核,同意,驳回,撤销;保存,返回;保存,返回,提交审核,撤销,确认出库,打印出库单;保存,返回," +
+            "提交审核,同意,驳回,撤销,确认出库,打印出库单;;保存,返回,提交审核,同意,驳回,撤销,确认接单,确认完成;保存,返回,提交审核,同意," +
+            "驳回,撤销,确认完成;保存,返回,提交审核,同意,驳回,撤销,确认接单,确认完成,确认出库,打印出库单,原料到货确认;保存,返回," +
+            "提交审核,同意,驳回,撤销,确认出库,确认入库,打印出库单;保存,返回,提交审核,同意,驳回,撤销,确认出库,确认入库,打印出库单;" +
+            "保存,返回,提交订单,同意,驳回,取消订单,确认收金,确认打款,确认完成;保存,返回,提交审核,同意,驳回,撤销,确认入库;保存,返回;;" +
+            "保存,返回;保存,返回;保存,返回,提交审核,同意,驳回,撤销;保存,返回;保存,返回";
     private static String RESOURCE_NAMES = "商品信息管理,商品分类管理,套餐管理,渠道分销上下架,渠道税率设置,原料信息管理,仓库设置," +
             "采购入库管理,其他入库管理,库存查询,库存盘点,物流管理,销售订单,预售订单,采购订单查询,成品采购订单,原料采购单,去料加工单," +
-            "库存调拨单,换货调拨单,收金订单,退货退款,套保订单,套保查询,待签任务,待办任务,会员信息" +
-            "黄金卡,限时折扣,消费赠券,短信营销,合作伙伴管理,公司信息管理,人员管理";
+            "库存调拨单,换货调拨单,收金订单,退货退款,套保订单,套保查询,待签任务,待办任务,会员信息,消费记录,积分记录,营销管理,优惠券," +
+            "黄金卡,限时折扣,消费赠券,短信营销,公司信息管理,合作伙伴管理,人员管理";
     private static String RESOURCE_IDS = "16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41," +
             "42,43,44,45,46,47,48,49,50,51,52,53";
-    private static String[] RIGHTS = new String[]{"可读","可写"};
+    private static String[] RIGHTS = new String[]{"可读", "可写"};
 
     public class Role {
         String id;
@@ -63,10 +72,11 @@ public class AuthGenerator {
         AuthGenerator authGenerator = new AuthGenerator();
 //        System.out.println(authGenerator.generateSQL("/Users/apple/Documents/石总/微购商城/权限设置1.0.csv"));
 //        generateRecordLevelAuth("/Users/apple/Documents/石总/微购商城/记录级别权限设置1.0.csv");
-        authGenerator.generateFieldLevelAuth(
-                "/Users/apple/Documents/石总/微购商城/table_info1.1.csv",
-                "/Users/apple/Documents/石总/微购商城/字段级别权限设置1.0.csv"
-        );
+//        authGenerator.generateFieldLevelAuth(
+//                "/Users/apple/Documents/石总/微购商城/table_info1.1.csv",
+//                "/Users/apple/Documents/石总/微购商城/字段级别权限设置1.0.csv"
+//        );
+        authGenerator.generateButtonAuth("/Users/apple/Documents/石总/微购商城/按钮级别权限设置1.0.csv");
     }
 
     public String generateSQL(String configFilePath) {
@@ -121,8 +131,8 @@ public class AuthGenerator {
         String[] roleIds = ROLE_IDS.split(",");
         String[] resourceIDs = RESOURCE_IDS.split(",");
         String[] resourceNames = RESOURCE_NAMES.split(",");
-        String[] scopes = new String[]{"个人", "部门", "公司", "全部"};
-        String[] rights = new String[]{"查看", "修改", "删除"};
+        String[] scopes = new String[]{"个人", "部门", "公司", "子公司", "全部"};
+        String[] rights = new String[]{"查看", "新增", "修改", "删除"};
 
         List<String> row = new ArrayList<String>();
         try {
@@ -205,11 +215,11 @@ public class AuthGenerator {
             List<String> row = new ArrayList<>();
             while ((nextLine = reader.readNext()) != null) {
                 if (rowIndex == 0) {
-                    for(int i=0; i< 1+ nextLine.length;i++){
+                    for (int i = 0; i < 1 + nextLine.length; i++) {
                         row.add("");
                     }
                     row.add("role_id");
-                    for (String roleId : roleIds){
+                    for (String roleId : roleIds) {
                         row.add(roleId);
                     }
                     writer.writeNext(row.toArray(new String[row.size()]));
@@ -223,7 +233,7 @@ public class AuthGenerator {
                     for (int i = 0; i < nextLine.length; i++) {
                         row.add(nextLine[i]);
                     }
-                    for (String roleName : roleNames){
+                    for (String roleName : roleNames) {
                         row.add(roleName);
                     }
                     writer.writeNext(row.toArray(new String[row.size()]));
@@ -236,7 +246,7 @@ public class AuthGenerator {
                             row = new ArrayList<>();
                             row.add(entry.getValue().toString());
                             row.add(entry.getKey());
-                            if(nextLine[2].endsWith("id"))
+                            if (nextLine[2].endsWith("id"))
                                 continue;
                             for (int i = 0; i < nextLine.length; i++) {
                                 row.add(nextLine[i]);
@@ -253,6 +263,51 @@ public class AuthGenerator {
             }
             writer.close();
             reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateButtonAuth(String outputFilePath) {
+
+        // form the dictionary for forms.
+        String[] menuNames = RESOURCE_NAMES2.split(",");
+        String[] roleNames = ROLE_NAMES.split(",");
+        String[] roleIds = ROLE_IDS.split(",");
+        String[] buttons = BUTTONS.split(";");
+        Map<String, Map<String, Integer>> dic = new HashMap<String, Map<String, Integer>>();
+        try {
+            CSVWriter writer = new CSVWriter(new PrintWriter(
+                    new OutputStreamWriter(new FileOutputStream(outputFilePath),
+                            Charset.forName("UTF-8"))), ',');
+            List<String> items = new ArrayList<>();
+            items.add("");
+            items.add("role_id");
+            items.addAll(Arrays.asList(roleIds));
+            writer.writeNext(items.toArray(new String[items.size()]));
+
+            items = new ArrayList<>();
+            items.add("功能");
+            items.add("范围");
+            items.addAll(Arrays.asList(roleNames));
+            writer.writeNext(items.toArray(new String[items.size()]));
+
+            int rowIndex = 1;
+            for (int i = 0; i < menuNames.length; i++) {
+                items = new ArrayList<>();
+                items.add(menuNames[i]);
+                String[] buttonsInFeature = buttons[i].split(",");
+                for (int j = 0; j < buttonsInFeature.length; j++) {
+                    List<String> subItems = new ArrayList<>();
+                    subItems.addAll(items);
+                    subItems.add(buttonsInFeature[j]);
+                    writer.writeNext(subItems.toArray(new String[subItems.size()]));
+                    System.out.printf("proceed %d row...\n", rowIndex);
+                    rowIndex++;
+                }
+
+            }
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
