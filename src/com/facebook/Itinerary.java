@@ -16,12 +16,12 @@ public class Itinerary {
     public static List<String> findItinerary(List<Flights> flights, String startingAirport) {
         if (flights == null || flights.size() == 0 || startingAirport == null || startingAirport == "")
             return null;
-        HashSet<String> visited = new HashSet<>();
-
         // find the desitinaton from a starting airport.
         List<String> bestItinerary = findNextStop(flights, startingAirport);
 
-        return bestItinerary == null || bestItinerary.size() != flights.size() + 1 ? null : bestItinerary;
+        if (bestItinerary == null || bestItinerary.size() != flights.size() + 1)
+            return null;
+        else return bestItinerary;
     }
 
     private static List<String> findNextStop(List<Flights> flights, String startingAirPort) {
@@ -38,7 +38,11 @@ public class Itinerary {
                 leftFlights.addAll(flights);
                 leftFlights.remove(flight);
                 path.add(flight.startingAirport);
+
                 List<String> subBestPath = findNextStop(leftFlights, flight.endingAirport);
+                if (subBestPath==null)
+                    continue;
+
                 path.addAll(subBestPath);
                 if (subBestPath == null)
                     continue;

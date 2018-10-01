@@ -33,4 +33,31 @@ public class ItineraryTest extends TestCase {
                 System.out.println(s);
             }
     }
+
+    @Test
+    public void testFindItinerary2() {
+        List<Flights> flights = new ArrayList<Flights>();
+        flights.add(new Flights("SFO", "HKO"));
+        flights.add(new Flights("YYZ", "SFO"));
+        flights.add(new Flights("YUL", "YYZ"));
+        flights.add(new Flights("HKO", "ORD"));
+
+        String startingAirport = "YUL";
+        List<String> result = Itinerary.findItinerary(flights, startingAirport);
+        if (result != null)
+            for (String s : result) {
+                System.out.println(s);
+            }
+    }
+
+    @Test
+    public void testFindItineraryWithNullReturn() {
+        List<Flights> flights = new ArrayList<Flights>();
+        flights.add(new Flights("SFO", "COM"));
+        flights.add(new Flights("COM", "YYZ"));
+
+        String startingAirport = "COM";
+        List<String> result = Itinerary.findItinerary(flights, startingAirport);
+        assertEquals(null, result);
+    }
 }
