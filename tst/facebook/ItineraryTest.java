@@ -1,6 +1,5 @@
 package facebook;
 
-import com.amazon.Anagrams;
 import com.facebook.Itinerary;
 import com.facebook.Itinerary.Flights;
 import junit.framework.TestCase;
