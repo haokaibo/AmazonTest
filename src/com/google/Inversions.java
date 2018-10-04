@@ -4,79 +4,68 @@ import java.util.HashMap;
 
 public class Inversions {
 
-    Element[] elements = null;
-
-    class Element {
-        int value;
-        int index;
-
-        Element(int value, int index) {
-            this.value = value;
-            this.index = index;
-        }
+    /* This method sorts the input array and returns the
+      number of inversions in the array */
+    public static int mergeSort(int arr[], int array_size) {
+        int temp[] = new int[array_size];
+        return _mergeSort(arr, temp, 0, array_size - 1);
     }
 
+    /* An auxiliary recursive method that sorts the input array and
+      returns the number of inversions in the array. */
+    static int _mergeSort(int arr[], int temp[], int left, int right) {
+        int mid, inv_count = 0;
+        if (right > left) {
+        /* Divide the array into two parts and call _mergeSortAndCountInv()
+           for each of the parts */
+            mid = (right + left) / 2;
 
-    public int countInversions(int[] arr) {
-        if (arr == null || arr.length == 0)
-            return 0;
+        /* Inversion count will be sum of inversions in left-part, right-part
+          and number of inversions in merging */
+            inv_count = _mergeSort(arr, temp, left, mid);
+            inv_count += _mergeSort(arr, temp, mid + 1, right);
 
-        elements = new Element[arr.length];
-        for (int i = 0; i < arr.length; i++)
-            elements[i] = new Element(arr[i], i);
-
-        // quick sort the array
-        int head = 0;
-        int tail = arr.length - 1;
-        quickSort(elements, head, tail);
-
-        // compare the index of each element in the array and calculate the inversions for each element.
-        int invertions = 0;
-        for (int j = 0; j < elements.length; j++) {
-            System.out.printf("v: %d o: %d c: %d o-c=%d\n",
-                    elements[j].value,
-                    elements[j].index,
-                    j,
-                    j - elements[j].index);
-            if (elements[j].index < j)
-                invertions += j - elements[j].index;
+            /*Merge the two parts*/
+            inv_count += merge(arr, temp, left, mid + 1, right);
         }
-
-        return invertions;
+        return inv_count;
     }
 
-    private void quickSort(Element[] elements, int head, int tail) {
-        int mid = head + (tail - head) / 2;
-        int pivot = elements[mid].value;
-        int i = head;
-        int j = tail;
-        while (i <= j) {
-            while (elements[i].value < pivot) {
-                i++;
-            }
-            while (elements[j].value > pivot) {
-                j--;
-            }
-            if (i <= j) {
-                swap(elements, i, j);
-                i++;
-                j--;
+    /* This method merges two sorted arrays and returns inversion count in
+       the arrays.*/
+    static int merge(int arr[], int temp[], int left, int mid, int right) {
+        int i, j, k;
+        int inv_count = 0;
+
+        i = left; /* i is index for left subarray*/
+        j = mid;  /* j is index for right subarray*/
+        k = left; /* k is index for resultant merged subarray*/
+        while ((i <= mid - 1) && (j <= right)) {
+            if (arr[i] <= arr[j]) {
+                temp[k++] = arr[i++];
+            } else {
+                temp[k++] = arr[j++];
+
+                /*this is tricky -- see above explanation/diagram for merge()*/
+                inv_count = inv_count + (mid - i);
             }
         }
 
-        if (i < tail) {
-            quickSort(elements, i, tail);
-        }
-        if (j > head) {
-            quickSort(elements, head, j);
-        }
-    }
+      /* Copy the remaining elements of left subarray
+       (if there are any) to temp*/
+        while (i <= mid - 1)
+            temp[k++] = arr[i++];
 
-    private void swap(Element[] elements, int i, int j) {
-        Element temp = elements[i];
-        elements[i] = elements[j];
-        elements[j] = temp;
+      /* Copy the remaining elements of right subarray
+       (if there are any) to temp*/
+        while (j <= right)
+            temp[k++] = arr[j++];
 
+        /*Copy back the merged elements to original array*/
+        for (i = left; i <= right; i++)
+            arr[i] = temp[i];
+
+        return inv_count;
     }
 
 }
