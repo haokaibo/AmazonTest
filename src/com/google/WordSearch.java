@@ -32,17 +32,15 @@ public class WordSearch {
 
         while (current < totalChars) {
             int i = 0;
-            for (; i < keyword.length; i++) {
-                if (chars[current / horizonLength][current % horizonLength] != keyword[i]) {
-                    if (i == 0)
-                        current++;
+            for (int index = current; i < keyword.length && index < totalChars; i++, index++) {
+                if (chars[index / horizonLength][index % horizonLength] != keyword[i]) {
                     break;
                 }
-                current++;
             }
             if (i == keyword.length) {
                 totalMatches++;
             }
+            current++;
         }
 
         return totalMatches;
