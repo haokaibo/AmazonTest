@@ -6,7 +6,7 @@ array of characters, and the second parameter a string which is the word we want
 An example would be the following inputs:
 A B X D W H O W
 W O R D S E U W
-O R H W O R D S
+O R D W O R D S
 R S E I J E E S
 D E R G H I R K
 S I E P R S E U
@@ -50,7 +50,7 @@ public class WordSearch {
         int result = findWords(new char[][]{
                         {'A', 'B', 'X', 'D', 'W', 'O', 'R', 'W'},
                         {'W', 'O', 'R', 'D', 'S', 'E', 'U', 'W'},
-                        {'O', 'R', 'H', 'W', 'O', 'R', 'D', 'S'},
+                        {'O', 'R', 'D', 'W', 'O', 'R', 'D', 'S'},
                         {'R', 'S', 'E', 'I', 'J', 'E', 'E', 'S'},
                         {'D', 'E', 'R', 'G', 'H', 'I', 'R', 'K'},
                         "SIEPRSEU".toCharArray()},

@@ -2,8 +2,8 @@ package com.google;
 
 import java.util.HashMap;
 import java.util.Map;
-
 public class IntegerExponentiation {
+
     Map<Integer, Integer> cache = new HashMap<>();
 
     public Integer pow(int x, int y) {

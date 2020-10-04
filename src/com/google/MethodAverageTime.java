@@ -45,9 +45,10 @@ public class MethodAverageTime {
         if (!methods.containsKey(fields[0])) {
             times = new Times();
             methods.put(fields[0], times);
+        }else {
+            times = methods.get(fields[0]);
+            times.put(fields[1], Long.valueOf(fields[2]));
         }
-        times = methods.get(fields[0]);
-        times.put(fields[1], Long.valueOf(fields[2]));
     }
 
     void getAverage() {
