@@ -51,5 +51,7 @@ public class BTtoBST {
                         new TreeNode(4)),
                 new TreeNode(7));
         System.out.println(bt1.print());
+
+        int a= 214967295;
     }
 }
